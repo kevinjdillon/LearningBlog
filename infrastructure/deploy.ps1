@@ -11,8 +11,34 @@ param(
 )
 
 # Ensure Az module is installed
-if (-not (Get-Module -ListAvailable Az)) {
+if (-not (Get-Module -ListAvailable Az.*)) {
     Write-Error "Az PowerShell module is required but not installed. Please install it using: Install-Module -Name Az -AllowClobber -Scope CurrentUser"
+    exit 1
+}
+
+# Ensure Bicep CLI is in PATH
+$bicepPaths = @(
+    "C:\Program Files\Microsoft\Azure\Bicep",
+    "$env:LOCALAPPDATA\Microsoft\Bicep"
+)
+
+foreach ($path in $bicepPaths) {
+    if (Test-Path $path) {
+        if ($env:Path -notlike "*$path*") {
+            $env:Path = "$env:Path;$path"
+        }
+    }
+}
+
+# Verify Bicep is available
+$bicepInstalled = Get-Command bicep -ErrorAction SilentlyContinue
+if (-not $bicepInstalled) {
+    Write-Error @"
+Bicep CLI is required but not found. Please:
+1. Ensure Bicep is installed (winget install -e --id Microsoft.Bicep)
+2. Close and reopen your PowerShell window
+3. Run this script again
+"@
     exit 1
 }
 

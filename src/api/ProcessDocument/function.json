@@ -1,0 +1,19 @@
+{
+  "bindings": [
+    {
+      "name": "inputBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "raw-documents/{name}",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "name": "outputDocument",
+      "type": "queue",
+      "direction": "out",
+      "queueName": "processed-documents",
+      "connection": "AzureWebJobsStorage"
+    }
+  ],
+  "scriptFile": "../dist/ProcessDocument/index.js"
+}

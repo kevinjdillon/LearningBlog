@@ -15,8 +15,8 @@ param tags object = {
 // Resource name variables
 var storageAccountName = 'stblog${environmentName}${uniqueString(resourceGroup().id)}'
 var functionAppName = 'func-blog-${environmentName}-${uniqueString(resourceGroup().id)}'
-var searchServiceName = 'srch-blog-${environmentName}-${uniqueString(resourceGroup().id)}'
-var keyVaultName = 'kv-blog-${environmentName}-${uniqueString(resourceGroup().id)}'
+var searchServiceName = 'srch${environmentName}${take(uniqueString(resourceGroup().id), 8)}'
+var keyVaultName = 'kv-blog${environmentName}${take(uniqueString(resourceGroup().id), 5)}'
 var staticAppName = 'stapp-blog-${environmentName}'
 var appInsightsName = 'appi-blog-${environmentName}'
 
@@ -63,9 +63,13 @@ module keyVaultModule 'modules/keyvault.bicep' = {
     location: location
     tags: tags
     functionAppPrincipalId: functionModule.outputs.functionAppPrincipalId
+    storageAccountName: storageModule.outputs.storageAccountName
+    searchServiceName: searchServiceName
   }
   dependsOn: [
     functionModule
+    searchModule
+    storageModule
   ]
 }
 

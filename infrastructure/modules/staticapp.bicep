@@ -17,7 +17,6 @@ resource staticApp 'Microsoft.Web/staticSites@2021-02-01' = {
     tier: 'Free'
   }
   properties: {
-    provider: 'GitHub'
     buildProperties: {
       skipGithubActionWorkflowGeneration: true  // We'll manage our own GitHub Actions workflow
     }
